@@ -1,11 +1,9 @@
 package main
 
 import (
-	"flag"
 	"go_mailer/api"
 	"go_mailer/config"
 	"go_mailer/scheduler"
-	"go_mailer/template"
 	"log"
 	"os"
 	"os/signal"
@@ -19,16 +17,6 @@ import (
 // the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
 
 func main() {
-	// Define command-line flags
-	fetchSheetData := flag.Bool("fetch-sheet", false, "Fetch data from Google Sheet API")
-	flag.Parse()
-
-	// If the fetch-sheet flag is provided, run the example and exit
-	if *fetchSheetData {
-		api.ExampleFetchGoogleSheetData()
-		return
-	}
-
 	// Load environment variables
 	loadEnvFile()
 
@@ -47,41 +35,31 @@ func main() {
 	// Set up graceful shutdown
 	setupGracefulShutdown(emailScheduler)
 
-	// Example usage
-	recipientEmail := "recipient@example.com"
-	subject := "Flutter Developer Application"
+	// Path to the email template
+	templatePath := "tamplets/email_template.html"
 
-	// Example template data
-	data := template.TemplateData{
-		RecipientName:       "John Doe",
-		CompanyName:         "TechCorp ( start at: " + time.Now().Format("2006-01-02 15:04:05") + "send at: " + time.Now().Add(5*time.Minute).Format("2006-01-02 15:04:05") + ")",
-		SpecificArea:        "mobile app development",
-		SpecificAchievement: "user-centric design",
-		SpecificProject:     "the mobile banking platform",
-		RelevantSkill:       "Flutter architecture",
-		SenderName:          "HR Department",
+	// Schedule emails from Google Sheet immediately
+	log.Println("Scheduling emails from Google Sheet data...")
+	err = api.ScheduleEmailsFromGoogleSheet(emailScheduler, templatePath)
+	if err != nil {
+		log.Printf("Error scheduling emails from Google Sheet: %v", err)
 	}
 
-	// Schedule the email for 5 minutes from now
-	scheduleEmail(emailScheduler, recipientEmail, subject, "tamplets/email_template.html", data, time.Now().Add(5*time.Minute))
+	// Set up a ticker to check for new entries every 2 hours
+	ticker := time.NewTicker(2 * time.Second)
+	go func() {
+		for range ticker.C {
+			log.Println("Checking Google Sheet for new emails to schedule...")
+			err := api.ScheduleEmailsFromGoogleSheet(emailScheduler, templatePath)
+			if err != nil {
+				log.Printf("Error scheduling emails from Google Sheet: %v", err)
+			}
+		}
+	}()
 
 	// Wait for scheduler to run
-	log.Println("Application running. Press Ctrl+C to exit.")
+	log.Println("Application running. Checking Google Sheet every 2 hours. Press Ctrl+C to exit.")
 	select {}
-}
-
-// scheduleEmail is a simple function to schedule an email with the given parameters
-func scheduleEmail(s *scheduler.Scheduler, to, subject, templatePath string, data template.TemplateData, sendTime time.Time) {
-	// Schedule the email
-	jobID, err := s.ScheduleEmail(to, subject, templatePath, data, sendTime)
-
-	if err != nil {
-		log.Printf("Failed to schedule email: %v", err)
-		return
-	}
-
-	log.Printf("Email scheduled with ID: %s to be sent at: %s",
-		jobID, sendTime.Format(time.RFC1123))
 }
 
 func setupGracefulShutdown(emailScheduler *scheduler.Scheduler) {

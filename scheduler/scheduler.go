@@ -22,10 +22,14 @@ type EmailJob struct {
 	Error        error
 }
 
+// EmailCallback is a function that is called when an email is sent
+type EmailCallback func(successful bool)
+
 // Scheduler manages scheduled email jobs
 type Scheduler struct {
 	mailClient *mailer.Mailer
 	jobs       map[string]*EmailJob
+	callbacks  map[string]EmailCallback
 	mu         sync.RWMutex
 	stopChan   chan struct{}
 	wg         sync.WaitGroup
@@ -36,8 +40,23 @@ func New(cfg *config.Config) *Scheduler {
 	return &Scheduler{
 		mailClient: mailer.New(cfg),
 		jobs:       make(map[string]*EmailJob),
+		callbacks:  make(map[string]EmailCallback),
 		stopChan:   make(chan struct{}),
 	}
+}
+
+// RegisterCallback registers a callback function for a specific job
+func (s *Scheduler) RegisterCallback(jobID string, callback EmailCallback) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	_, exists := s.jobs[jobID]
+	if !exists {
+		log.Printf("Warning: Trying to register callback for non-existent job ID: %s", jobID)
+		return
+	}
+
+	s.callbacks[jobID] = callback
 }
 
 // ScheduleEmail schedules an email to be sent at a specific time
@@ -161,15 +180,26 @@ func (s *Scheduler) processJobs() {
 
 			// Update job status
 			s.mu.Lock()
+			var successful bool
 			if err != nil {
 				j.Status = "failed"
 				j.Error = err
 				log.Printf("Failed to send scheduled email '%s': %v", j.ID, err)
+				successful = false
 			} else {
 				j.Status = "sent"
 				log.Printf("Scheduled email '%s' sent successfully", j.ID)
+				successful = true
 			}
+
+			// Get the callback if it exists
+			callback, hasCallback := s.callbacks[j.ID]
 			s.mu.Unlock()
+
+			// Execute the callback if it exists
+			if hasCallback {
+				go callback(successful)
+			}
 		}(job)
 	}
 }

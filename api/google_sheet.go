@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -54,4 +55,50 @@ func FetchGoogleSheetData() (*GoogleSheetResponse, error) {
 	}
 
 	return &sheetResponse, nil
+}
+
+// UpdateSendStatus updates the send status for an email in the Google Sheet
+func UpdateSendStatus(email string, sendStatus bool) error {
+	// Base API URL
+	baseURL := "https://script.google.com/macros/s/AKfycbywKRyWKtP2ryCXkPog-ycXN2_z6J8jDKrSTQjX9KCADUsCBTzRW_SMNFF6bNM1Dco9/exec"
+
+	// Build URL with query parameters
+	params := url.Values{}
+	params.Add("action", "update")
+	params.Add("email", email)
+	params.Add("sendStatus", fmt.Sprintf("%t", sendStatus))
+
+	updateURL := fmt.Sprintf("%s?%s", baseURL, params.Encode())
+
+	// Make GET request to update the status
+	resp, err := http.Get(updateURL)
+	if err != nil {
+		return fmt.Errorf("error making request to update send status: %w", err)
+	}
+	defer resp.Body.Close()
+
+	// Check if response status code is OK
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("received non-OK response status when updating send status: %s", resp.Status)
+	}
+
+	// Read response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("error reading response body for update: %w", err)
+	}
+
+	// Parse JSON response to check status
+	var response map[string]interface{}
+	if err := json.Unmarshal(body, &response); err != nil {
+		return fmt.Errorf("error parsing JSON response for update: %w", err)
+	}
+
+	// Check if update was successful
+	status, ok := response["status"].(string)
+	if !ok || status != "success" {
+		return fmt.Errorf("update was not successful, response: %s", string(body))
+	}
+
+	return nil
 }
