@@ -85,7 +85,7 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, template
 		var sendTime time.Time
 		if time.Now().After(combinedSendTime) {
 			// If combined time is in the past, schedule for immediate sending (2 minutes from now)
-			sendTime = time.Now().Add(2 * time.Minute)
+			sendTime = time.Now().Add(1 * time.Minute)
 			log.Printf("⏱️ Send time for %s is in the past (%s), rescheduling to %s",
 				record.Email, combinedSendTime.Format("2006-01-02 15:04:05"),
 				sendTime.Format("2006-01-02 15:04:05"))
