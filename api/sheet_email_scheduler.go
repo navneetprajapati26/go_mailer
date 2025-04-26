@@ -64,15 +64,11 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, template
 			continue
 		}
 
-		// Create template data for the email
+		// Create template data for the email with the updated structure
 		data := template.TemplateData{
-			RecipientName:       record.EmployeeName,
-			CompanyName:         record.CompanyName,
-			SpecificArea:        "your area of expertise",
-			SpecificAchievement: "your achievements",
-			SpecificProject:     "your projects",
-			RelevantSkill:       record.Roll, // Using the role as a relevant skill
-			SenderName:          "HR Department",
+			RecipientName:   record.EmployeeName,
+			CompanyName:     record.CompanyName,
+			ApplyingForRoll: record.Roll,
 		}
 
 		// Combine date and time to create a full send time

@@ -4,6 +4,7 @@ import (
 	"go_mailer/api"
 	"go_mailer/config"
 	"go_mailer/scheduler"
+	"go_mailer/template"
 	"log"
 	"os"
 	"os/signal"
@@ -40,8 +41,8 @@ func main() {
 	// Set up graceful shutdown
 	setupGracefulShutdown(emailScheduler)
 
-	// Path to the email template
-	templatePath := "tamplets/email_template.html"
+	// Use the template path from constants
+	templatePath := template.DefaultEmailTemplate
 	log.Printf("📝 Using email template: %s", templatePath)
 
 	// Schedule emails from Google Sheet immediately

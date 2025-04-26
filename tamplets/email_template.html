@@ -100,26 +100,38 @@
 <body>
 <div class="header">
     <h1>Navneet Prajapati</h1>
-    <div class="subheading">Flutter Developer | Go & Node.js Backend Expert</div>
+    <div class="subheading">Flutter Developer | Go Backend Expert</div>
 </div>
+
 
 <p>Dear {{.RecipientName}},</p>
 
-<p>I hope this email finds you well. I'm reaching out because I've been following {{.CompanyName}}'s innovative work in {{.SpecificArea}} and I'm impressed by your approach to {{.SpecificAchievement}}.</p>
+<p>I hope this email finds you well. I'm reaching out because I've been following {{.CompanyName}}'s innovative work and I'm impressed by your approach.</p>
+
+
 
 <div class="highlight-box">
-    <p>As a Flutter Developer with 2+ years of experience building cross-platform applications, I specialize in creating responsive UI with clean architecture and state management solutions like Riverpod, Bloc, and Provider. My full-stack expertise also includes Go and Node.js backend development.</p>
+    <p>I am writing to express my interest in the <strong>{{.ApplyingForRoll}}</strong> position at {{.CompanyName}}. As a Flutter Developer with 2+ years of experience building cross-platform applications, I specialize in creating responsive UI with clean architecture and state management solutions like Riverpod, Bloc, and Provider. My full-stack expertise also includes Go backend development.</p>
 </div>
+
+
+<div style="text-align: center; margin: 20px 0;">
+    <a href="https://drive.google.com/file/d/1Xw-hPYZzP77D0EHOdA1P8Fej7cny0Jdc/view" class="cta-button" style="background-color: #198754; font-size: 14px; padding: 8px 15px;">
+        View Resume
+    </a>
+    <a href="https://drive.google.com/file/d/1osOOCtfIhHfsa8BBzlGmxmx8seuQ-GLc/view" class="cta-button" style="background-color: #198754; font-size: 14px; padding: 8px 15px; margin-left: 10px;">
+        View CV
+    </a>
+</div>
+
 
 <h2>What I Bring to the Table</h2>
 <div class="skills">
     <span class="skill-tag">Flutter Development</span>
     <span class="skill-tag">Cross-Platform Apps</span>
-    <span class="skill-tag">Riverpod</span>
+    <span class="skill-tag">UI/UX</span>
     <span class="skill-tag">Clean Architecture</span>
-    <span class="skill-tag">Go Backend</span>
-    <span class="skill-tag">Node.js</span>
-    <span class="skill-tag">UI/UX Design</span>
+    <span class="skill-tag">Golang</span>
     <span class="skill-tag">RESTful APIs</span>
 </div>
 
@@ -129,35 +141,52 @@
     <div><span class="company">Internshala</span> - <span class="position">Associate Software Engineer</span></div>
     <div class="period">Feb 2024 - Present</div>
     <div class="achievements">
-        <div class="achievement">• Promoted from intern based on exceptional Flutter development performance</div>
-        <div class="achievement">• Implemented iOS Flutter app architecture using Riverpod with clean architecture principles</div>
-        <div class="achievement">• Built reusable UI components with complex state management, improving development velocity by 30%</div>
+        <div class="achievement">• Promoted from intern to full-time role based on exceptional Flutter development performance</div>
+        <div class="achievement">• Designed and implemented iOS Flutter app architecture using clean architecture principles (Repository Pattern, Use Cases)</div>
+        <div class="achievement">• Developed a centralized cookie management system for API interactions, improving authentication and security</div>
+        <div class="achievement">• Built background API calling with retry mechanisms and offline-first capabilities for robust user experience</div>
+        <div class="achievement">• Created reusable UI components with complex state management, improving development velocity by 30%</div>
+        <div class="achievement">• Implemented complex purchase flows with proper state handling and error recovery mechanisms</div>
     </div>
 </div>
+
+<!--<div class="experience">-->
+<!--    <div><span class="company">Visario</span> - <span class="position">Full Stack Developer</span></div>-->
+<!--    <div class="period">Sep 2023 - Feb 2024</div>-->
+<!--    <div class="achievements">-->
+<!--        <div class="achievement">• Developed full-stack visa application platform with Flutter frontend and Go backend</div>-->
+<!--        <div class="achievement">• Integrated Razorpay payment gateway with secure transaction handling</div>-->
+<!--    </div>-->
+<!--</div>-->
 
 <div class="experience">
-    <div><span class="company">Visario</span> - <span class="position">Full Stack Developer</span></div>
-    <div class="period">Sep 2023 - Feb 2024</div>
+    <div><span class="company">Recent Personal Project</span> - <span class="position">Email and Google Sheet Integrated Automated Mailer</span></div>
+    <div class="period">Apr 2025</div>
     <div class="achievements">
-        <div class="achievement">• Developed full-stack visa application platform with Flutter frontend and Go backend</div>
-        <div class="achievement">• Integrated Razorpay payment gateway with secure transaction handling</div>
+        <div class="achievement">• Developed a Go-based automated email system that integrates with Google Sheets for data retrieval</div>
+        <div class="achievement">• Built a scheduler service that automatically sends personalized emails based on scheduled times</div>
+        <div class="achievement">• Implemented a status tracking system to update Google Sheets when emails are successfully delivered</div>
+        <div class="achievement">• Fun fact: This email was sent to you using this automated mailer system!</div>
     </div>
 </div>
 
-<p>I'm particularly excited about the possibility of contributing to {{.SpecificProject}} at {{.CompanyName}}. I believe my experience with {{.RelevantSkill}} would allow me to make meaningful contributions to your team.</p>
+<p>I'm particularly excited about the possibility of contributing to {{.CompanyName}} as a {{.ApplyingForRoll}}. I believe my experience would allow me to make meaningful contributions to your team.</p>
 
 <p>I'd welcome the opportunity to discuss how my skills align with your needs. Would you be available for a brief call next week to explore potential collaboration?</p>
-
-<div style="text-align: center; margin: 30px 0;">
-    <a href="mailto:navneetprajapati26@gmail.com?subject=Let's%20Schedule%20a%20Call&body=Hi%2C%0A%0AI%20would%20like%20to%20schedule%20a%20call%20with%20you.%20Please%20let%20me%20know%20your%20availability.%0A%0AThanks%2C%0A{{.SenderName}}" class="cta-button">
-        Schedule a Call
-    </a>
-</div>
 
 <p>Thank you for considering my application. I look forward to potentially working together.</p>
 
 <p>Best regards,<br>
     Navneet Prajapati</p>
+
+<div style="text-align: center; margin: 30px 0; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+    <a href="mailto:navneetprajapati26@gmail.com?subject=Interested%20in%20Your%20Application&body=Hi%20Navneet%2C%0A%0AI've%20reviewed%20your%20application%20and%20I'm%20interested%20in%20discussing%20the%20{{.ApplyingForRoll}}%20position%20at%20{{.CompanyName}}%20further.%0A%0AWould%20you%20be%20available%20for%20a%20call%20on%20[suggest%20date/time]%3F%0A%0ALooking%20forward%20to%20speaking%20with%20you.%0A%0ABest%20regards%2C%0A[Your%20Name]%0A{{.CompanyName}}" class="cta-button">
+        I'm Interested in Your Profile
+    </a>
+    <a href="mailto:navneetprajapati26@gmail.com?subject=Regarding%20Your%20Application&body=Hi%20Navneet%2C%0A%0AThank%20you%20for%20your%20interest%20in%20the%20{{.ApplyingForRoll}}%20position%20at%20{{.CompanyName}}.%0A%0AWhile%20your%20background%20is%20impressive%2C%20we've%20decided%20to%20proceed%20with%20other%20candidates%20whose%20experience%20more%20closely%20aligns%20with%20our%20current%20needs.%0A%0AWe%20appreciate%20your%20interest%20in%20our%20company%20and%20wish%20you%20success%20in%20your%20job%20search.%0A%0ABest%20regards%2C%0A[Your%20Name]%0A{{.CompanyName}}" class="cta-button" style="background-color: #6c757d;">
+        Not a Match for Current Openings
+    </a>
+</div>
 
 <div class="contact">
     <p>📱 +91 7271088606 | 📧 navneetprajapati26@gmail.com</p>

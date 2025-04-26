@@ -8,13 +8,9 @@ import (
 
 // TemplateData holds the data to be injected into the email template
 type TemplateData struct {
-	RecipientName       string
-	CompanyName         string
-	SpecificArea        string
-	SpecificAchievement string
-	SpecificProject     string
-	RelevantSkill       string
-	SenderName          string
+	RecipientName   string
+	CompanyName     string
+	ApplyingForRoll string
 }
 
 // Process reads an HTML template file and replaces placeholder values with actual data
