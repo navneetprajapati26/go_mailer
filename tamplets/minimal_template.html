@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flutter Developer - Minimal Introduction</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 15px;
+            background-color: #ffffff;
+        }
+        .header {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 500;
+            color: #111;
+        }
+        h2 {
+            font-size: 18px;
+            margin-top: 25px;
+            font-weight: 500;
+            color: #111;
+        }
+        .subheading {
+            font-size: 16px;
+            margin-top: 5px;
+            color: #666;
+            font-weight: 400;
+        }
+        .skills {
+            margin: 20px 0;
+        }
+        .skill-tag {
+            display: inline-block;
+            background-color: #f7f7f7;
+            color: #333;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin: 0 8px 8px 0;
+        }
+        .experience {
+            margin-bottom: 20px;
+        }
+        .company {
+            font-weight: 500;
+            color: #111;
+        }
+        .position {
+            color: #333;
+        }
+        .period {
+            color: #666;
+            font-size: 14px;
+        }
+        .achievements {
+            margin-top: 10px;
+        }
+        .achievement {
+            margin-bottom: 8px;
+            color: #444;
+        }
+        .contact {
+            margin-top: 25px;
+            text-align: center;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+        }
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Navneet Prajapati</h1>
+    <div class="subheading">Flutter Developer | Go Backend Developer</div>
+</div>
+
+<!-- Using table-based layout for better email client compatibility -->
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="left" style="padding: 10px 0;">
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td style="border-radius: 4px; background-color: #f7f7f7; padding: 0;" align="center">
+            <a href="https://drive.google.com/file/d/1Xw-hPYZzP77D0EHOdA1P8Fej7cny0Jdc/view" 
+              style="font-size: 14px; font-family: 'Helvetica Neue', Arial, sans-serif; color: #333; text-decoration: none; border-radius: 4px; padding: 8px 16px; border: 1px solid #eee; display: inline-block; font-weight: 500;">
+              View Resume
+            </a>
+          </td>
+          <td width="10"></td>
+          <td style="border-radius: 4px; background-color: #f7f7f7; padding: 0;" align="center">
+            <a href="https://drive.google.com/file/d/1osOOCtfIhHfsa8BBzlGmxmx8seuQ-GLc/view" 
+              style="font-size: 14px; font-family: 'Helvetica Neue', Arial, sans-serif; color: #333; text-decoration: none; border-radius: 4px; padding: 8px 16px; border: 1px solid #eee; display: inline-block; font-weight: 500;">
+              View CV
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<p>Dear {{.RecipientName}},</p>
+
+<p>I'm writing to express my interest in the <strong>{{.ApplyingForRoll}}</strong> position at {{.CompanyName}}.</p>
+
+<p>With over two years of experience in Flutter development, I specialize in building high-quality cross-platform applications using clean architecture principles and effective state management. My backend experience with Go complements my full-stack capabilities.</p>
+
+<h2>Skills</h2>
+<div class="skills">
+    <span class="skill-tag">Flutter</span>
+    <span class="skill-tag">Cross-Platform</span>
+    <span class="skill-tag">UI/UX</span>
+    <span class="skill-tag">Clean Architecture</span>
+    <span class="skill-tag">Golang</span>
+    <span class="skill-tag">RESTful APIs</span>
+</div>
+
+<h2>Experience</h2>
+
+<div class="experience">
+    <div><span class="company">Internshala</span> · <span class="position">Associate Software Engineer</span></div>
+    <div class="period">Feb 2024 - Present</div>
+    <div class="achievements">
+        <div class="achievement">• Promoted from intern based on Flutter development performance</div>
+        <div class="achievement">• Implemented iOS Flutter architecture with clean architecture principles</div>
+        <div class="achievement">• Developed centralized cookie management for API authentication</div>
+        <div class="achievement">• Built background API calling with offline-first capabilities</div>
+        <div class="achievement">• Created reusable UI components improving development velocity by 30%</div>
+    </div>
+</div>
+
+<div class="experience">
+    <div><span class="company">Recent Project</span> · <span class="position">Automated Email System</span></div>
+    <div class="period">2025</div>
+    <div class="achievements">
+        <div class="achievement">• Built a Go-based email system with Google Sheets integration</div>
+        <div class="achievement">• Implemented scheduling and status tracking capabilities</div>
+        <div class="achievement">• This email was sent using the system I developed</div>
+    </div>
+</div>
+
+<p>I believe my technical skills and experience align well with what {{.CompanyName}} is looking for in a {{.ApplyingForRoll}}. I'd welcome the opportunity to discuss how I could contribute to your team.</p>
+
+<p>Thank you for your consideration.</p>
+
+<p>Regards,<br>
+Navneet Prajapati</p>
+
+<!-- Using table-based layout for better email client compatibility -->
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" style="padding: 20px 0;">
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td style="border-radius: 4px; background-color: #000000; padding: 0;" align="center">
+            <a href="mailto:navneetprajapati26@gmail.com?subject=Interested%20in%20Your%20Application&body=Hi%20Navneet%2C%0A%0AI've%20reviewed%20your%20application%20and%20I'm%20interested%20in%20discussing%20the%20{{.ApplyingForRoll}}%20position%20at%20{{.CompanyName}}%20further.%0A%0AWould%20you%20be%20available%20for%20a%20call%20on%20[suggest%20date/time]%3F%0A%0ALooking%20forward%20to%20speaking%20with%20you.%0A%0ABest%20regards%2C%0A[Your%20Name]%0A{{.CompanyName}}" 
+              style="font-size: 15px; font-family: 'Helvetica Neue', Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 4px; padding: 10px 20px; border: 1px solid #000000; display: inline-block; font-weight: 500;">
+              I'm Interested in Your Profile
+            </a>
+          </td>
+          <td width="15"></td>
+          <td style="border-radius: 4px; background-color: #f7f7f7; padding: 0;" align="center">
+            <a href="mailto:navneetprajapati26@gmail.com?subject=Regarding%20Your%20Application&body=Hi%20Navneet%2C%0A%0AThank%20you%20for%20your%20interest%20in%20the%20{{.ApplyingForRoll}}%20position%20at%20{{.CompanyName}}.%0A%0AWhile%20your%20background%20is%20impressive%2C%20we've%20decided%20to%20proceed%20with%20other%20candidates%20whose%20experience%20more%20closely%20aligns%20with%20our%20current%20needs.%0A%0AWe%20appreciate%20your%20interest%20in%20our%20company%20and%20wish%20you%20success%20in%20your%20job%20search.%0A%0ABest%20regards%2C%0A[Your%20Name]%0A{{.CompanyName}}" 
+              style="font-size: 15px; font-family: 'Helvetica Neue', Arial, sans-serif; color: #333; text-decoration: none; border-radius: 4px; padding: 10px 20px; border: 1px solid #ddd; display: inline-block; font-weight: 500;">
+              Not a Match for Current Openings
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<div class="contact">
+    <p>📱 +91 7271088606 | 📧 navneetprajapati26@gmail.com</p>
+    <p>
+        <a href="https://www.linkedin.com/in/navneetprajapati26/" style="text-decoration: none; color: #333; margin: 0 10px;">LinkedIn</a> |
+        <a href="https://github.com/navneetprajapati26" style="text-decoration: none; color: #333; margin: 0 10px;">GitHub</a> |
+        <a href="https://navneet.asyncapps.com/" style="text-decoration: none; color: #333; margin: 0 10px;">Portfolio</a>
+    </p>
+</div>
+
+<div class="footer">
+    <p>This email was sent specifically to you and is not a mass email campaign.</p>
+</div>
+</body>
+</html> 

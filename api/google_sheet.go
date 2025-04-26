@@ -21,6 +21,7 @@ type SheetData struct {
 	Roll         string    `json:"Roll"`
 	EmployeeName string    `json:"EmployeeName"`
 	Email        string    `json:"Email"`
+	TemplateName string    `json:"TemplateName"`
 	SendAtDate   time.Time `json:"SendAtDate"`
 	SendAtTime   time.Time `json:"SendAtTime"`
 	SendStatus   bool      `json:"SendStatus"`

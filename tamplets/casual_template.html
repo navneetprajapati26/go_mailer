@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flutter Developer - Casual Introduction</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            background-color: #3066BE;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        h2 {
+            color: #3066BE;
+            font-size: 20px;
+            margin-top: 25px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .subheading {
+            font-size: 18px;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+        .content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+        .skill-tag {
+            background-color: #E1EFFF;
+            color: #3066BE;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin: 3px;
+            font-weight: 500;
+        }
+        .experience {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 3px solid #3066BE;
+            background-color: #f9f9f9;
+        }
+        .company {
+            font-weight: bold;
+            color: #333;
+        }
+        .position {
+            color: #3066BE;
+            font-weight: 500;
+        }
+        .period {
+            color: #666;
+            font-size: 14px;
+        }
+        .achievements {
+            margin-top: 10px;
+        }
+        .achievement {
+            margin-bottom: 8px;
+        }
+        .contact {
+            margin-top: 25px;
+            text-align: center;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Navneet Prajapati</h1>
+    <div class="subheading">Flutter Developer | Go Backend Developer</div>
+</div>
+
+<!-- Using table-based layout for better email client compatibility -->
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" style="padding: 20px 0;">
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td style="border-radius: 5px; background-color: #198754; padding: 0;" align="center">
+            <a href="https://drive.google.com/file/d/1Xw-hPYZzP77D0EHOdA1P8Fej7cny0Jdc/view" 
+              style="font-size: 14px; font-family: 'Segoe UI', Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid #198754; display: inline-block; font-weight: bold;">
+              View Resume
+            </a>
+          </td>
+          <td width="15"></td>
+          <td style="border-radius: 5px; background-color: #198754; padding: 0;" align="center">
+            <a href="https://drive.google.com/file/d/1osOOCtfIhHfsa8BBzlGmxmx8seuQ-GLc/view" 
+              style="font-size: 14px; font-family: 'Segoe UI', Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid #198754; display: inline-block; font-weight: bold;">
+              View CV
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<div class="content">
+    <p>Hey {{.RecipientName}},</p>
+
+    <p>I hope you're doing well! I came across {{.CompanyName}} recently and was really impressed by what you're building. The tech world needs more innovative companies like yours!</p>
+
+    <p>I'm reaching out because I'd love to discuss the <strong>{{.ApplyingForRoll}}</strong> position at {{.CompanyName}}. I'm a Flutter developer with over 2 years of experience building cross-platform apps with clean architecture and robust state management. I also have solid experience with Go for backend development.</p>
+
+    <h2>My Toolkit</h2>
+    <div class="skills">
+        <span class="skill-tag">Flutter Development</span>
+        <span class="skill-tag">Cross-Platform Apps</span>
+        <span class="skill-tag">UI/UX</span>
+        <span class="skill-tag">Clean Architecture</span>
+        <span class="skill-tag">Golang</span>
+        <span class="skill-tag">RESTful APIs</span>
+    </div>
+
+    <h2>What I've Been Up To</h2>
+
+    <div class="experience">
+        <div><span class="company">Internshala</span> - <span class="position">Associate Software Engineer</span></div>
+        <div class="period">Feb 2024 - Present</div>
+        <div class="achievements">
+            <div class="achievement">• Promoted from intern to full-time role based on exceptional Flutter development performance</div>
+            <div class="achievement">• Designed and implemented iOS Flutter app architecture using clean architecture principles (Repository Pattern, Use Cases)</div>
+            <div class="achievement">• Developed a centralized cookie management system for API interactions, improving authentication and security</div>
+            <div class="achievement">• Built background API calling with retry mechanisms and offline-first capabilities for robust user experience</div>
+            <div class="achievement">• Created reusable UI components with complex state management, improving development velocity by 30%</div>
+            <div class="achievement">• Implemented complex purchase flows with proper state handling and error recovery mechanisms</div>
+        </div>
+    </div>
+
+    <div class="experience">
+        <div><span class="company">Recent Personal Project</span> - <span class="position">Email and Google Sheet Integrated Automated Mailer</span></div>
+        <div class="period">Apr 2025</div>
+        <div class="achievements">
+            <div class="achievement">• Developed a Go-based automated email system that integrates with Google Sheets for data retrieval</div>
+            <div class="achievement">• Built a scheduler service that automatically sends personalized emails based on scheduled times</div>
+            <div class="achievement">• Implemented a status tracking system to update Google Sheets when emails are successfully delivered</div>
+            <div class="achievement">• Fun fact: This email was sent to you using this automated mailer system!</div>
+        </div>
+    </div>
+
+    <p>I'd love to chat about how I could contribute to the team at {{.CompanyName}} as a {{.ApplyingForRoll}}. Are you open to a quick call next week to discuss?</p>
+
+    <p>Looking forward to potentially connecting!</p>
+
+    <p>Cheers,<br>
+    Navneet Prajapati</p>
+</div>
+
+<!-- Using table-based layout for better email client compatibility -->
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td align="center" style="padding: 30px 0;">
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td style="border-radius: 5px; background-color: #3066BE; padding: 0;" align="center">
+            <a href="mailto:navneetprajapati26@gmail.com?subject=Interested%20in%20Your%20Application&body=Hi%20Navneet%2C%0A%0AI've%20reviewed%20your%20application%20and%20I'm%20interested%20in%20discussing%20the%20{{.ApplyingForRoll}}%20position%20at%20{{.CompanyName}}%20further.%0A%0AWould%20you%20be%20available%20for%20a%20call%20on%20[suggest%20date/time]%3F%0A%0ALooking%20forward%20to%20speaking%20with%20you.%0A%0ABest%20regards%2C%0A[Your%20Name]%0A{{.CompanyName}}" 
+              style="font-size: 16px; font-family: 'Segoe UI', Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 5px; padding: 12px 24px; border: 1px solid #3066BE; display: inline-block; font-weight: bold;">
+              I'm Interested in Your Profile
+            </a>
+          </td>
+          <td width="20"></td>
+          <td style="border-radius: 5px; background-color: #6c757d; padding: 0;" align="center">
+            <a href="mailto:navneetprajapati26@gmail.com?subject=Regarding%20Your%20Application&body=Hi%20Navneet%2C%0A%0AThank%20you%20for%20your%20interest%20in%20the%20{{.ApplyingForRoll}}%20position%20at%20{{.CompanyName}}.%0A%0AWhile%20your%20background%20is%20impressive%2C%20we've%20decided%20to%20proceed%20with%20other%20candidates%20whose%20experience%20more%20closely%20aligns%20with%20our%20current%20needs.%0A%0AWe%20appreciate%20your%20interest%20in%20our%20company%20and%20wish%20you%20success%20in%20your%20job%20search.%0A%0ABest%20regards%2C%0A[Your%20Name]%0A{{.CompanyName}}" 
+              style="font-size: 16px; font-family: 'Segoe UI', Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 5px; padding: 12px 24px; border: 1px solid #6c757d; display: inline-block; font-weight: bold;">
+              Not a Match for Current Openings
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<div class="contact">
+    <p>📱 +91 7271088606 | 📧 navneetprajapati26@gmail.com</p>
+    <p>
+        <a href="https://www.linkedin.com/in/navneetprajapati26/" style="text-decoration: none; color: #3066BE; margin: 0 10px;">LinkedIn</a> |
+        <a href="https://github.com/navneetprajapati26" style="text-decoration: none; color: #3066BE; margin: 0 10px;">GitHub</a> |
+        <a href="https://navneet.asyncapps.com/" style="text-decoration: none; color: #3066BE; margin: 0 10px;">Portfolio</a>
+    </p>
+</div>
+
+<div class="footer">
+    <p>This email was sent specifically to you and is not a mass email campaign.</p>
+</div>
+</body>
+</html> 

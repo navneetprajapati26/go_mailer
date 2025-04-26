@@ -70,6 +70,10 @@ func main() {
 
 	// Wait for scheduler to run
 	log.Println("✅ Application running. Press Ctrl+C to exit.")
+	log.Println("🔍 Available templates:")
+	log.Printf("   - Default: %s", template.DefaultEmailTemplate)
+	log.Printf("   - Casual: %s", template.CasualEmailTemplate)
+	log.Printf("   - Minimal: %s", template.MinimalEmailTemplate)
 	select {}
 }
 
