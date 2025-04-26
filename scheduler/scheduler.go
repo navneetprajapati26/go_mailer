@@ -52,7 +52,7 @@ func (s *Scheduler) RegisterCallback(jobID string, callback EmailCallback) {
 
 	_, exists := s.jobs[jobID]
 	if !exists {
-		log.Printf("Warning: Trying to register callback for non-existent job ID: %s", jobID)
+		log.Printf("⚠️ Warning: Trying to register callback for non-existent job ID: %s", jobID)
 		return
 	}
 
@@ -78,7 +78,8 @@ func (s *Scheduler) ScheduleEmail(to, subject, templatePath string, templateData
 	s.jobs[id] = job
 	s.mu.Unlock()
 
-	log.Printf("Email scheduled with ID '%s' to be sent at %s", id, sendAt.Format(time.RFC1123))
+	log.Printf("📋 Email job created with ID '%s' to %s scheduled for %s",
+		id, to, sendAt.Format("2006-01-02 15:04:05"))
 	return id, nil
 }
 
@@ -129,7 +130,7 @@ func (s *Scheduler) CancelJob(id string) error {
 
 // Start starts the scheduler
 func (s *Scheduler) Start() {
-	log.Println("Email scheduler started")
+	log.Println("▶️ Email scheduler started")
 
 	s.wg.Add(1)
 	go func() {
@@ -150,10 +151,10 @@ func (s *Scheduler) Start() {
 
 // Stop stops the scheduler
 func (s *Scheduler) Stop() {
-	log.Println("Stopping email scheduler...")
+	log.Println("⏹️ Stopping email scheduler...")
 	close(s.stopChan)
 	s.wg.Wait()
-	log.Println("Email scheduler stopped")
+	log.Println("✅ Email scheduler stopped")
 }
 
 // processJobs processes jobs that are due
@@ -170,10 +171,14 @@ func (s *Scheduler) processJobs() {
 	}
 	s.mu.RUnlock()
 
+	if len(jobsToProcess) > 0 {
+		log.Printf("⏱️ Processing %d due email jobs", len(jobsToProcess))
+	}
+
 	// Process each job
 	for _, job := range jobsToProcess {
 		go func(j *EmailJob) {
-			log.Printf("Processing scheduled email job '%s'", j.ID)
+			log.Printf("📤 Processing email to %s (Job ID: %s)", j.To, j.ID)
 
 			// Send the email
 			err := s.mailClient.SendWithTemplate(j.To, j.Subject, j.TemplatePath, j.TemplateData)
@@ -184,11 +189,11 @@ func (s *Scheduler) processJobs() {
 			if err != nil {
 				j.Status = "failed"
 				j.Error = err
-				log.Printf("Failed to send scheduled email '%s': %v", j.ID, err)
+				log.Printf("❌ Failed to send email '%s' to %s: %v", j.ID, j.To, err)
 				successful = false
 			} else {
 				j.Status = "sent"
-				log.Printf("Scheduled email '%s' sent successfully", j.ID)
+				log.Printf("✅ Email '%s' to %s sent successfully", j.ID, j.To)
 				successful = true
 			}
 

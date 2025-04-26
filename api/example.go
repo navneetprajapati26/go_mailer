@@ -29,7 +29,7 @@ func ExampleFetchGoogleSheetData() {
 		fmt.Printf("  Role: %s\n", record.Roll)
 		fmt.Printf("  Employee Name: %s\n", record.EmployeeName)
 		fmt.Printf("  Email: %s\n", record.Email)
-		fmt.Printf("  Send At: %s\n", record.SendAt.Format("2006-01-02 15:04:05"))
+		fmt.Printf("  Send At: %s\n", record.SendAtTime.Format("2006-01-02 15:04:05"))
 		fmt.Printf("  Send Status: %v\n", record.SendStatus)
 		fmt.Println()
 	}
