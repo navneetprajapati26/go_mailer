@@ -109,14 +109,19 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 			ApplyingForRoll: record.Roll,
 		}
 
-		// Extract date components from SendAtDate
-		year, month, day := record.SendAtDate.Date()
+		// Get IST location
+		ist, err := time.LoadLocation("Asia/Kolkata")
+		if err != nil {
+			log.Printf("❌ Error loading IST location: %v", err)
+			continue
+		}
+
+		// Convert SendAtDate to IST
+		sendAtDateIST := record.SendAtDate.In(ist)
+		year, month, day := sendAtDateIST.Date()
 
 		// Extract time components from SendAtTime
 		hour, min, sec := record.SendAtTime.Clock()
-
-		// Create a new combined datetime in Indian Standard Time
-		ist, _ := time.LoadLocation("Asia/Kolkata")
 
 		// Validate if SendAtTime is not the default value (1899-12-30)
 		if record.SendAtTime.Year() == 1899 && record.SendAtTime.Month() == 12 && record.SendAtTime.Day() == 30 {
