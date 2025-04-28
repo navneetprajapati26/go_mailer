@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"go_mailer/config"
 	"io"
 	"net/http"
 	"net/url"
@@ -28,9 +29,9 @@ type SheetData struct {
 }
 
 // FetchGoogleSheetData makes a request to the Google Sheet API and returns the parsed data
-func FetchGoogleSheetData() (*GoogleSheetResponse, error) {
+func FetchGoogleSheetData(cfg *config.Config) (*GoogleSheetResponse, error) {
 	// Google Sheet API URL
-	apiURL := "https://script.google.com/macros/s/AKfycbywKRyWKtP2ryCXkPog-ycXN2_z6J8jDKrSTQjX9KCADUsCBTzRW_SMNFF6bNM1Dco9/exec"
+	apiURL := cfg.GOOGEL_SHEET_API
 
 	// Make GET request
 	resp, err := http.Get(apiURL)
@@ -60,9 +61,9 @@ func FetchGoogleSheetData() (*GoogleSheetResponse, error) {
 }
 
 // UpdateSendStatus updates the send status for an email in the Google Sheet
-func UpdateSendStatus(email string, sendStatus bool) error {
+func UpdateSendStatus(email string, sendStatus bool, cfg *config.Config) error {
 	// Base API URL
-	baseURL := "https://script.google.com/macros/s/AKfycbywKRyWKtP2ryCXkPog-ycXN2_z6J8jDKrSTQjX9KCADUsCBTzRW_SMNFF6bNM1Dco9/exec"
+	baseURL := cfg.GOOGEL_SHEET_API
 
 	// Build URL with query parameters
 	params := url.Values{}

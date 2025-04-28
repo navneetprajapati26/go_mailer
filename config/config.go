@@ -7,10 +7,11 @@ import (
 
 // Config holds the application configuration
 type Config struct {
-	SenderEmail string
-	Password    string
-	SMTPHost    string
-	SMTPPort    string
+	SenderEmail      string
+	Password         string
+	SMTPHost         string
+	SMTPPort         string
+	GOOGEL_SHEET_API string
 }
 
 // Load loads the configuration from environment variables
@@ -19,6 +20,7 @@ func Load() (*Config, error) {
 	password := os.Getenv("PASSWORD")
 	smtpHost := os.Getenv("SMTP_HOST")
 	smtpPort := os.Getenv("SMTP_PORT")
+	googelSheetApi := os.Getenv("GOOGEL_SHEET_API")
 
 	// Set defaults if not provided
 	if smtpHost == "" {
@@ -34,10 +36,11 @@ func Load() (*Config, error) {
 	}
 
 	return &Config{
-		SenderEmail: senderEmail,
-		Password:    password,
-		SMTPHost:    smtpHost,
-		SMTPPort:    smtpPort,
+		SenderEmail:      senderEmail,
+		Password:         password,
+		SMTPHost:         smtpHost,
+		SMTPPort:         smtpPort,
+		GOOGEL_SHEET_API: googelSheetApi,
 	}, nil
 }
 

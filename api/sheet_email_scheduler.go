@@ -1,6 +1,7 @@
 package api
 
 import (
+	"go_mailer/config"
 	"go_mailer/scheduler"
 	"go_mailer/template"
 	"log"
@@ -46,10 +47,10 @@ func getTemplatePath(templateName string) string {
 
 // ScheduleEmailsFromGoogleSheet fetches data from Google Sheet and schedules emails for entries
 // where SendStatus is false
-func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, defaultTemplatePath string) error {
+func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *config.Config) error {
 	// Fetch data from Google Sheet API
 	log.Println("🔄 Fetching data from Google Sheet API...")
-	response, err := FetchGoogleSheetData()
+	response, err := FetchGoogleSheetData(cfg)
 	if err != nil {
 		log.Printf("❌ Error fetching data from Google Sheet API: %v", err)
 		return err
@@ -136,7 +137,7 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, defaultT
 
 		// Schedule the email
 		subject := "Regarding " + record.Roll + " Position at " + record.CompanyName
-		jobID := scheduleEmailWithCallback(emailScheduler, record.Email, subject, templatePath, data, sendTime)
+		jobID := scheduleEmailWithCallback(emailScheduler, record.Email, subject, templatePath, data, sendTime, cfg)
 		if jobID != "" {
 			scheduled++
 			log.Printf("📅 Scheduled email to %s (%s) at %s - Subject: %s",
@@ -161,6 +162,7 @@ func scheduleEmailWithCallback(
 	to, subject, templatePath string,
 	data template.TemplateData,
 	sendTime time.Time,
+	cfg *config.Config,
 ) string {
 	// Schedule the email
 	jobID, err := s.ScheduleEmail(to, subject, templatePath, data, sendTime)
@@ -175,7 +177,7 @@ func scheduleEmailWithCallback(
 		if successful {
 			// If email was sent successfully, update the Google Sheet
 			log.Printf("✉️ Email sent successfully to %s, updating Google Sheet...", to)
-			err := UpdateSendStatus(to, true)
+			err := UpdateSendStatus(to, true, cfg)
 			if err != nil {
 				log.Printf("❌ Failed to update send status for %s: %v", to, err)
 			} else {

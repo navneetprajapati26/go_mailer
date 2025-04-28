@@ -41,19 +41,15 @@ func main() {
 	// Set up graceful shutdown
 	setupGracefulShutdown(emailScheduler)
 
-	// Use the template path from constants
-	templatePath := template.DefaultEmailTemplate
-	log.Printf("📝 Using email template: %s", templatePath)
-
 	// Schedule emails from Google Sheet immediately
 	log.Println("🔄 Initiating first Google Sheet check...")
-	err = api.ScheduleEmailsFromGoogleSheet(emailScheduler, templatePath)
+	err = api.ScheduleEmailsFromGoogleSheet(emailScheduler, cfg)
 	if err != nil {
 		log.Printf("❌ Error during initial scheduling from Google Sheet: %v", err)
 	}
 
 	// Set up a ticker to check for new entries every 2 hours
-	checkInterval := 2 * time.Second // For testing, use seconds
+	checkInterval := 3 * time.Hour // For testing, use seconds
 	log.Printf("⏰ Setting up automatic checks every %v", checkInterval)
 
 	ticker := time.NewTicker(checkInterval)
@@ -61,7 +57,7 @@ func main() {
 		for t := range ticker.C {
 			log.Printf("🔄 Scheduled check at %s - Checking Google Sheet for new emails...",
 				t.Format("2006-01-02 15:04:05"))
-			err := api.ScheduleEmailsFromGoogleSheet(emailScheduler, templatePath)
+			err := api.ScheduleEmailsFromGoogleSheet(emailScheduler, cfg)
 			if err != nil {
 				log.Printf("❌ Error scheduling emails from Google Sheet: %v", err)
 			}
