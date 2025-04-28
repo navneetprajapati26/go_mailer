@@ -77,7 +77,7 @@ func (s *Scheduler) ScheduleEmail(to, subject, templatePath string, templateData
 	s.mu.Lock()
 	s.jobs[id] = job
 	s.mu.Unlock()
-	ist, _ := time.LoadLocation("Asia/Kolkata")
+	ist := time.FixedZone("IST", 5*60*60+30*60)
 	log.Printf("📋 Email job created with ID '%s' to %s scheduled for %s", id, to, sendAt.In(ist).Format("2006-01-02 15:04:05"))
 	return id, nil
 }
@@ -158,7 +158,7 @@ func (s *Scheduler) Stop() {
 
 // processJobs processes jobs that are due
 func (s *Scheduler) processJobs() {
-	ist, _ := time.LoadLocation("Asia/Kolkata")
+	ist := time.FixedZone("IST", 5*60*60+30*60)
 	now := time.Now().In(ist)
 	var jobsToProcess []*EmailJob
 

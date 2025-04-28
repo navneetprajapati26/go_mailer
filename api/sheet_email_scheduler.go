@@ -110,11 +110,7 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 		}
 
 		// Get IST location
-		ist, err := time.LoadLocation("Asia/Kolkata")
-		if err != nil {
-			log.Printf("❌ Error loading IST location: %v", err)
-			continue
-		}
+		ist := time.FixedZone("IST", 5*60*60+30*60)
 
 		// Convert SendAtDate to IST
 		sendAtDateIST := record.SendAtDate.In(ist)
