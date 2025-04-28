@@ -117,20 +117,25 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 
 		// Create a new combined datetime in Indian Standard Time
 		ist, _ := time.LoadLocation("Asia/Kolkata")
+
+		// Validate if SendAtTime is not the default value (1899-12-30)
+		if record.SendAtTime.Year() == 1899 && record.SendAtTime.Month() == 12 && record.SendAtTime.Day() == 30 {
+			// Use default time of 00:00:00 if SendAtTime is default
+			hour, min, sec = 0, 0, 0
+		}
+
+		// Create the combined time in IST
 		combinedSendTime := time.Date(year, month, day, hour, min, sec, 0, ist)
 
 		// Determine when to send the email
 		var sendTime time.Time
-		if time.Now().After(combinedSendTime) {
+		if time.Now().In(ist).After(combinedSendTime) {
 			// If combined time is in the past, schedule for immediate sending (1 minute from now)
-			sendTime = time.Now()
-			sendTime.In(ist).Format("2006-01-02 15:04:05 MST")
-			log.Printf("⏱️ Send time for %s is in the past (%s), rescheduling to %s", record.Email, combinedSendTime.Format("2006-01-02 15:04:05"), sendTime)
+			sendTime = time.Now().In(ist).Add(time.Minute)
+			log.Printf("⏱️ Send time for %s is in the past (%s), rescheduling to %s", record.Email, combinedSendTime.Format("2006-01-02 15:04:05 MST"), sendTime.Format("2006-01-02 15:04:05 MST"))
 		} else {
 			sendTime = combinedSendTime
 		}
-
-		sendTime.In(ist).Format("2006-01-02 15:04:05 MST")
 
 		// Get the appropriate template path based on the template name in the record
 		templatePath := getTemplatePath(record.TemplateName)
