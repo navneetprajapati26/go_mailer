@@ -3,8 +3,8 @@ package mailer
 import (
 	"fmt"
 	"go_mailer/config"
+	"go_mailer/logger"
 	"go_mailer/template"
-	"log"
 	"net/smtp"
 	"os"
 )
@@ -56,7 +56,7 @@ func (m *Mailer) SendWithTemplate(to string, subject string, htmlFilePath string
 		return fmt.Errorf("smtp error: %w", err)
 	}
 
-	log.Printf("Email sent successfully to %s", to)
+	logger.Info("Email sent successfully to %s", to)
 	return nil
 }
 
@@ -65,11 +65,11 @@ func Send(to string, subject string, htmlFilePath string) {
 	from := os.Getenv("SENDER_MAIL_ID")
 	pass := os.Getenv("PASSWORD")
 
-	log.Printf("From and Pass from ENV: %s %s", from, pass)
+	logger.Info("From and Pass from ENV: %s %s", from, pass)
 
 	htmlContent, err := os.ReadFile(htmlFilePath)
 	if err != nil {
-		log.Printf("error reading HTML file: %s", err)
+		logger.Error("error reading HTML file: %s", err)
 		return
 	}
 	// Create proper email with MIME headers
@@ -92,9 +92,9 @@ func Send(to string, subject string, htmlFilePath string) {
 		from, []string{to}, []byte(message))
 
 	if err != nil {
-		log.Printf("smtp error: %s", err)
+		logger.Error("smtp error: %s", err)
 		return
 	}
 
-	log.Print("sent, visit http://foobarbazz.mailinator.com")
+	logger.Info("sent, visit http://foobarbazz.mailinator.com")
 }

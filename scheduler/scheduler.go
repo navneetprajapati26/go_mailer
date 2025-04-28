@@ -3,9 +3,9 @@ package scheduler
 import (
 	"fmt"
 	"go_mailer/config"
+	"go_mailer/logger"
 	"go_mailer/mailer"
 	"go_mailer/template"
-	"log"
 	"sync"
 	"time"
 )
@@ -52,7 +52,7 @@ func (s *Scheduler) RegisterCallback(jobID string, callback EmailCallback) {
 
 	_, exists := s.jobs[jobID]
 	if !exists {
-		log.Printf("⚠️ Warning: Trying to register callback for non-existent job ID: %s", jobID)
+		logger.Warning("⚠️ Warning: Trying to register callback for non-existent job ID: %s", jobID)
 		return
 	}
 
@@ -78,7 +78,7 @@ func (s *Scheduler) ScheduleEmail(to, subject, templatePath string, templateData
 	s.jobs[id] = job
 	s.mu.Unlock()
 	ist := time.FixedZone("IST", 5*60*60+30*60)
-	log.Printf("📋 Email job created with ID '%s' to %s scheduled for %s", id, to, sendAt.In(ist).Format("2006-01-02 15:04:05"))
+	logger.Info("📋 Email job created with ID '%s' to %s scheduled for %s", id, to, sendAt.In(ist).Format("2006-01-02 15:04:05"))
 	return id, nil
 }
 
@@ -123,13 +123,13 @@ func (s *Scheduler) CancelJob(id string) error {
 	}
 
 	delete(s.jobs, id)
-	log.Printf("Job with ID '%s' has been cancelled", id)
+	logger.Info("Job with ID '%s' has been cancelled", id)
 	return nil
 }
 
 // Start starts the scheduler
 func (s *Scheduler) Start() {
-	log.Println("▶️ Email scheduler started")
+	logger.Info("▶️ Email scheduler started")
 
 	s.wg.Add(1)
 	go func() {
@@ -150,10 +150,10 @@ func (s *Scheduler) Start() {
 
 // Stop stops the scheduler
 func (s *Scheduler) Stop() {
-	log.Println("⏹️ Stopping email scheduler...")
+	logger.Info("⏹️ Stopping email scheduler...")
 	close(s.stopChan)
 	s.wg.Wait()
-	log.Println("✅ Email scheduler stopped")
+	logger.Info("✅ Email scheduler stopped")
 }
 
 // processJobs processes jobs that are due
@@ -172,13 +172,13 @@ func (s *Scheduler) processJobs() {
 	s.mu.RUnlock()
 
 	if len(jobsToProcess) > 0 {
-		log.Printf("⏱️ Processing %d due email jobs", len(jobsToProcess))
+		logger.Info("⏱️ Processing %d due email jobs", len(jobsToProcess))
 	}
 
 	// Process each job
 	for _, job := range jobsToProcess {
 		go func(j *EmailJob) {
-			log.Printf("📤 Processing email to %s (Job ID: %s)", j.To, j.ID)
+			logger.Info("📤 Processing email to %s (Job ID: %s)", j.To, j.ID)
 
 			// Send the email
 			err := s.mailClient.SendWithTemplate(j.To, j.Subject, j.TemplatePath, j.TemplateData)
@@ -189,11 +189,11 @@ func (s *Scheduler) processJobs() {
 			if err != nil {
 				j.Status = "failed"
 				j.Error = err
-				log.Printf("❌ Failed to send email '%s' to %s: %v", j.ID, j.To, err)
+				logger.Error("❌ Failed to send email '%s' to %s: %v", j.ID, j.To, err)
 				successful = false
 			} else {
 				j.Status = "sent"
-				log.Printf("✅ Email '%s' to %s sent successfully", j.ID, j.To)
+				logger.Info("✅ Email '%s' to %s sent successfully", j.ID, j.To)
 				successful = true
 			}
 

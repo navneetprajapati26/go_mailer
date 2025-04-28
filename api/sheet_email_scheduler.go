@@ -2,9 +2,9 @@ package api
 
 import (
 	"go_mailer/config"
+	"go_mailer/logger"
 	"go_mailer/scheduler"
 	"go_mailer/template"
-	"log"
 	"strings"
 	"time"
 )
@@ -15,17 +15,17 @@ type EmailCompletionCallback func(jobID string, email string) error
 // getTemplatePath returns the path to the email template based on the template name
 func getTemplatePath(templateName string) string {
 	// Print raw template name for debugging
-	log.Printf("🔍 Raw template name from API: '%s'", templateName)
+	logger.Debug("🔍 Raw template name from API: '%s'", templateName)
 
 	// Default to the standard template if no template is specified
 	if templateName == "" {
-		log.Printf("⚠️ Empty template name, using default template")
+		logger.Warning("⚠️ Empty template name, using default template")
 		return template.DefaultEmailTemplate
 	}
 
 	// Convert to lowercase and trim spaces for case-insensitive matching
 	templateNameLower := strings.ToLower(strings.TrimSpace(templateName))
-	log.Printf("🔄 Processed template name: '%s'", templateNameLower)
+	logger.Debug("🔄 Processed template name: '%s'", templateNameLower)
 
 	var selectedTemplate string
 
@@ -37,11 +37,11 @@ func getTemplatePath(templateName string) string {
 	case "minimal":
 		selectedTemplate = template.MinimalEmailTemplate
 	default:
-		log.Printf("⚠️ Unknown template name: '%s', using default template", templateNameLower)
+		logger.Warning("⚠️ Unknown template name: '%s', using default template", templateNameLower)
 		selectedTemplate = template.DefaultEmailTemplate
 	}
 
-	log.Printf("✅ Selected template path: %s", selectedTemplate)
+	logger.Debug("✅ Selected template path: %s", selectedTemplate)
 	return selectedTemplate
 }
 
@@ -49,20 +49,20 @@ func getTemplatePath(templateName string) string {
 // where SendStatus is false
 func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *config.Config) error {
 	// Fetch data from Google Sheet API
-	log.Println("🔄 Fetching data from Google Sheet API...")
+	logger.Info("🔄 Fetching data from Google Sheet API...")
 	response, err := FetchGoogleSheetData(cfg)
 	if err != nil {
-		log.Printf("❌ Error fetching data from Google Sheet API: %v", err)
+		logger.Error("❌ Error fetching data from Google Sheet API: %v", err)
 		return err
 	}
 
 	// Check if the request was successful
 	if response.Status != "success" {
-		log.Printf("⚠️ Google Sheet API returned non-success status: %s", response.Status)
+		logger.Warning("⚠️ Google Sheet API returned non-success status: %s", response.Status)
 		return nil
 	}
 
-	log.Printf("✅ Successfully fetched %d records from Google Sheet", len(response.Data))
+	logger.Info("✅ Successfully fetched %d records from Google Sheet", len(response.Data))
 
 	// Get all pending jobs to check if emails are already scheduled
 	allJobs := emailScheduler.ListJobs()
@@ -76,7 +76,7 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 			pendingCount++
 		}
 	}
-	log.Printf("ℹ️ Found %d emails already scheduled and pending", pendingCount)
+	logger.Info("ℹ️ Found %d emails already scheduled and pending", pendingCount)
 
 	// Track stats for logging
 	skippedSent := 0
@@ -86,7 +86,7 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 	// Process each record
 	for _, record := range response.Data {
 		// Log the raw record for debugging
-		log.Printf("🔍 Processing record: %+v", record)
+		logger.Debug("🔍 Processing record: %+v", record)
 
 		// Skip if SendStatus is true (already sent)
 		if record.SendStatus {
@@ -96,7 +96,7 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 
 		// Skip if email is already scheduled and pending
 		if pendingEmails[record.Email] {
-			log.Printf("⏭️ Skipping %s (%s at %s) - already scheduled and pending",
+			logger.Info("⏭️ Skipping %s (%s at %s) - already scheduled and pending",
 				record.Email, record.EmployeeName, record.CompanyName)
 			skippedPending++
 			continue
@@ -133,21 +133,21 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 		if time.Now().In(ist).After(combinedSendTime) {
 			// If combined time is in the past, schedule for immediate sending (1 minute from now)
 			sendTime = time.Now().In(ist).Add(time.Minute)
-			log.Printf("⏱️ Send time for %s is in the past (%s), rescheduling to %s", record.Email, combinedSendTime.Format("2006-01-02 15:04:05 MST"), sendTime.Format("2006-01-02 15:04:05 MST"))
+			logger.Info("⏱️ Send time for %s is in the past (%s), rescheduling to %s", record.Email, combinedSendTime.Format("2006-01-02 15:04:05 MST"), sendTime.Format("2006-01-02 15:04:05 MST"))
 		} else {
 			sendTime = combinedSendTime
 		}
 
 		// Get the appropriate template path based on the template name in the record
 		templatePath := getTemplatePath(record.TemplateName)
-		log.Printf("📄 Using template: %s for email to %s", templatePath, record.Email)
+		logger.Debug("📄 Using template: %s for email to %s", templatePath, record.Email)
 
 		// Schedule the email
 		subject := "Regarding " + record.Roll + " Position at " + record.CompanyName
 		jobID := scheduleEmailWithCallback(emailScheduler, record.Email, subject, templatePath, data, sendTime, cfg)
 		if jobID != "" {
 			scheduled++
-			log.Printf("📅 Scheduled email to %s (%s) at %s IST - Subject: %s", record.Email, record.EmployeeName, sendTime, subject)
+			logger.Info("📅 Scheduled email to %s (%s) at %s IST - Subject: %s", record.Email, record.EmployeeName, sendTime, subject)
 		}
 
 		// Mark this email as pending to avoid scheduling it again in this batch
@@ -155,7 +155,7 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 	}
 
 	// Summary log
-	log.Printf("📊 Summary: %d records processed, %d scheduled, %d skipped (already sent), %d skipped (already pending)", len(response.Data), scheduled, skippedSent, skippedPending)
+	logger.Info("📊 Summary: %d records processed, %d scheduled, %d skipped (already sent), %d skipped (already pending)", len(response.Data), scheduled, skippedSent, skippedPending)
 
 	return nil
 }
@@ -173,7 +173,7 @@ func scheduleEmailWithCallback(
 	jobID, err := s.ScheduleEmail(to, subject, templatePath, data, sendTime)
 
 	if err != nil {
-		log.Printf("❌ Failed to schedule email to %s: %v", to, err)
+		logger.Error("❌ Failed to schedule email to %s: %v", to, err)
 		return ""
 	}
 
@@ -181,15 +181,15 @@ func scheduleEmailWithCallback(
 	s.RegisterCallback(jobID, func(successful bool) {
 		if successful {
 			// If email was sent successfully, update the Google Sheet
-			log.Printf("✉️ Email sent successfully to %s, updating Google Sheet...", to)
+			logger.Info("✉️ Email sent successfully to %s, updating Google Sheet...", to)
 			err := UpdateSendStatus(to, true, cfg)
 			if err != nil {
-				log.Printf("❌ Failed to update send status for %s: %v", to, err)
+				logger.Error("❌ Failed to update send status for %s: %v", to, err)
 			} else {
-				log.Printf("✅ Successfully updated send status for %s in Google Sheet", to)
+				logger.Info("✅ Successfully updated send status for %s in Google Sheet", to)
 			}
 		} else {
-			log.Printf("❌ Email to %s failed to send", to)
+			logger.Error("❌ Email to %s failed to send", to)
 		}
 	})
 

@@ -3,9 +3,9 @@ package main
 import (
 	"go_mailer/api"
 	"go_mailer/config"
+	"go_mailer/logger"
 	"go_mailer/scheduler"
 	"go_mailer/template"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -19,18 +19,18 @@ import (
 
 func main() {
 	// Set up initial log message with timestamp
-	log.Printf("🚀 Starting Go Mailer Service - %s", time.Now().Format("2006-01-02 15:04:05"))
+	logger.Info("🚀 Starting Go Mailer Service - %s", time.Now().Format("2006-01-02 15:04:05"))
 
 	// Load environment variables
 	loadEnvFile()
 
 	// Load configuration
-	log.Println("⚙️ Loading application configuration...")
+	logger.Info("⚙️ Loading application configuration...")
 	cfg, err := config.Load()
 	if err != nil {
-		log.Fatalf("❌ Failed to load configuration: %v", err)
+		logger.Fatal("❌ Failed to load configuration: %v", err)
 	}
-	log.Println("✅ Configuration loaded successfully")
+	logger.Info("✅ Configuration loaded successfully")
 
 	// Create a scheduler instance
 	emailScheduler := scheduler.New(cfg)
@@ -42,34 +42,34 @@ func main() {
 	setupGracefulShutdown(emailScheduler)
 
 	// Schedule emails from Google Sheet immediately
-	log.Println("🔄 Initiating first Google Sheet check...")
+	logger.Info("🔄 Initiating first Google Sheet check...")
 	err = api.ScheduleEmailsFromGoogleSheet(emailScheduler, cfg)
 	if err != nil {
-		log.Printf("❌ Error during initial scheduling from Google Sheet: %v", err)
+		logger.Error("❌ Error during initial scheduling from Google Sheet: %v", err)
 	}
 
 	// Set up a ticker to check for new entries every 2 hours
-	checkInterval := 3 * time.Minute // For testing, use seconds
-	log.Printf("⏰ Setting up automatic checks every %v", checkInterval)
+	checkInterval := 2 * time.Hour // For testing, use seconds
+	logger.Info("⏰ Setting up automatic checks every %v", checkInterval)
 
 	ticker := time.NewTicker(checkInterval)
 	go func() {
 		for t := range ticker.C {
-			log.Printf("🔄 Scheduled check at %s - Checking Google Sheet for new emails...",
+			logger.Info("🔄 Scheduled check at %s - Checking Google Sheet for new emails...",
 				t.Format("2006-01-02 15:04:05"))
 			err := api.ScheduleEmailsFromGoogleSheet(emailScheduler, cfg)
 			if err != nil {
-				log.Printf("❌ Error scheduling emails from Google Sheet: %v", err)
+				logger.Error("❌ Error scheduling emails from Google Sheet: %v", err)
 			}
 		}
 	}()
 
 	// Wait for scheduler to run
-	log.Println("✅ Application running. Press Ctrl+C to exit.")
-	log.Println("🔍 Available templates:")
-	log.Printf("   - Default: %s", template.DefaultEmailTemplate)
-	log.Printf("   - Casual: %s", template.CasualEmailTemplate)
-	log.Printf("   - Minimal: %s", template.MinimalEmailTemplate)
+	logger.Info("✅ Application running. Press Ctrl+C to exit.")
+	logger.Info("🔍 Available templates:")
+	logger.Info("   - Default: %s", template.DefaultEmailTemplate)
+	logger.Info("   - Casual: %s", template.CasualEmailTemplate)
+	logger.Info("   - Minimal: %s", template.MinimalEmailTemplate)
 	select {}
 }
 
@@ -79,19 +79,19 @@ func setupGracefulShutdown(emailScheduler *scheduler.Scheduler) {
 
 	go func() {
 		<-c
-		log.Println("🛑 Shutdown signal received")
+		logger.Info("🛑 Shutdown signal received")
 		emailScheduler.Stop()
-		log.Println("👋 Application shutdown complete")
+		logger.Info("👋 Application shutdown complete")
 		os.Exit(0)
 	}()
 }
 
 func loadEnvFile() {
-	log.Println("🔑 Loading environment variables...")
+	logger.Info("🔑 Loading environment variables...")
 	errEnv := godotenv.Load()
 	if errEnv != nil {
-		log.Println("⚠️ Warning: Error loading .env file:", errEnv)
+		logger.Warning("⚠️ Warning: Error loading .env file: %v", errEnv)
 	} else {
-		log.Println("✅ Environment variables loaded successfully")
+		logger.Info("✅ Environment variables loaded successfully")
 	}
 }
