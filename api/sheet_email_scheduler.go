@@ -115,18 +115,15 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 		// Extract time components from SendAtTime
 		hour, min, sec := record.SendAtTime.Clock()
 
-		// Create a new combined datetime in IST
-		istLocation, err := time.LoadLocation("Asia/Kolkata")
-		if err != nil {
-			log.Printf("❌ Error loading IST timezone: %v", err)
-			istLocation = time.Local // Fallback to local time if IST can't be loaded
-		}
+		// Create a new combined datetime in UTC
+		combinedSendTime := time.Date(year, month, day, hour, min, sec, 0, time.UTC)
 
-		// Create the time in IST
-		combinedSendTime := time.Date(year, month, day, hour, min, sec, 0, istLocation)
+		// Convert UTC time to IST (UTC+5:30)
+		istOffset := 5*60*60 + 30*60 // 5 hours and 30 minutes in seconds
+		combinedSendTime = combinedSendTime.Add(time.Duration(istOffset) * time.Second)
 
-		// Get current time in IST
-		now := time.Now().In(istLocation)
+		// Get current time in UTC and convert to IST
+		now := time.Now().UTC().Add(time.Duration(istOffset) * time.Second)
 
 		// Determine when to send the email
 		var sendTime time.Time
