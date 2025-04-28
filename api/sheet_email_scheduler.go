@@ -109,21 +109,30 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 			ApplyingForRoll: record.Roll,
 		}
 
-		// Combine date and time to create a full send time
 		// Extract date components from SendAtDate
 		year, month, day := record.SendAtDate.Date()
 
 		// Extract time components from SendAtTime
 		hour, min, sec := record.SendAtTime.Clock()
 
-		// Create a new combined datetime
-		combinedSendTime := time.Date(year, month, day, hour, min, sec, 0, time.Local)
+		// Create a new combined datetime in IST
+		istLocation, err := time.LoadLocation("Asia/Kolkata")
+		if err != nil {
+			log.Printf("❌ Error loading IST timezone: %v", err)
+			istLocation = time.Local // Fallback to local time if IST can't be loaded
+		}
+
+		// Create the time in IST
+		combinedSendTime := time.Date(year, month, day, hour, min, sec, 0, istLocation)
+
+		// Get current time in IST
+		now := time.Now().In(istLocation)
 
 		// Determine when to send the email
 		var sendTime time.Time
-		if time.Now().After(combinedSendTime) {
+		if now.After(combinedSendTime) {
 			// If combined time is in the past, schedule for immediate sending (1 minute from now)
-			sendTime = time.Now().Add(1 * time.Minute)
+			sendTime = now.Add(1 * time.Minute)
 			log.Printf("⏱️ Send time for %s is in the past (%s), rescheduling to %s",
 				record.Email, combinedSendTime.Format("2006-01-02 15:04:05"),
 				sendTime.Format("2006-01-02 15:04:05"))
@@ -140,7 +149,7 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 		jobID := scheduleEmailWithCallback(emailScheduler, record.Email, subject, templatePath, data, sendTime, cfg)
 		if jobID != "" {
 			scheduled++
-			log.Printf("📅 Scheduled email to %s (%s) at %s - Subject: %s",
+			log.Printf("📅 Scheduled email to %s (%s) at %s IST - Subject: %s",
 				record.Email, record.EmployeeName, sendTime.Format("2006-01-02 15:04:05"), subject)
 		}
 
