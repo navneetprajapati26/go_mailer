@@ -12,6 +12,8 @@ type Config struct {
 	SMTPHost         string
 	SMTPPort         string
 	GOOGEL_SHEET_API string
+	InputTimezone    string // Timezone for input times (e.g., "Asia/Kolkata")
+	ServerTimezone   string // Timezone where server is running (e.g., "Asia/Singapore")
 }
 
 // Load loads the configuration from environment variables

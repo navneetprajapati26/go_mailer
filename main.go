@@ -49,7 +49,7 @@ func main() {
 	}
 
 	// Set up a ticker to check for new entries every 2 hours
-	checkInterval := 3 * time.Hour // For testing, use seconds
+	checkInterval := 3 * time.Minute // For testing, use seconds
 	log.Printf("⏰ Setting up automatic checks every %v", checkInterval)
 
 	ticker := time.NewTicker(checkInterval)
