@@ -115,27 +115,22 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 		// Extract time components from SendAtTime
 		hour, min, sec := record.SendAtTime.Clock()
 
-		// Create a new combined datetime in UTC
-		combinedSendTime := time.Date(year, month, day, hour, min, sec, 0, time.UTC)
-
-		// Convert UTC time to IST (UTC+5:30)
-		istOffset := 5*60*60 + 30*60 // 5 hours and 30 minutes in seconds
-		combinedSendTime = combinedSendTime.Add(time.Duration(istOffset) * time.Second)
-
-		// Get current time in UTC and convert to IST
-		now := time.Now().UTC().Add(time.Duration(istOffset) * time.Second)
+		// Create a new combined datetime in Indian Standard Time
+		ist, _ := time.LoadLocation("Asia/Kolkata")
+		combinedSendTime := time.Date(year, month, day, hour, min, sec, 0, ist)
 
 		// Determine when to send the email
 		var sendTime time.Time
-		if now.After(combinedSendTime) {
+		if time.Now().After(combinedSendTime) {
 			// If combined time is in the past, schedule for immediate sending (1 minute from now)
-			sendTime = now.Add(1 * time.Minute)
-			log.Printf("⏱️ Send time for %s is in the past (%s), rescheduling to %s",
-				record.Email, combinedSendTime.Format("2006-01-02 15:04:05"),
-				sendTime.Format("2006-01-02 15:04:05"))
+			sendTime = time.Now()
+			sendTime.In(ist).Format("2006-01-02 15:04:05 MST")
+			log.Printf("⏱️ Send time for %s is in the past (%s), rescheduling to %s", record.Email, combinedSendTime.Format("2006-01-02 15:04:05"), sendTime)
 		} else {
 			sendTime = combinedSendTime
 		}
+
+		sendTime.In(ist).Format("2006-01-02 15:04:05 MST")
 
 		// Get the appropriate template path based on the template name in the record
 		templatePath := getTemplatePath(record.TemplateName)
@@ -146,8 +141,7 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 		jobID := scheduleEmailWithCallback(emailScheduler, record.Email, subject, templatePath, data, sendTime, cfg)
 		if jobID != "" {
 			scheduled++
-			log.Printf("📅 Scheduled email to %s (%s) at %s IST - Subject: %s",
-				record.Email, record.EmployeeName, sendTime.Format("2006-01-02 15:04:05"), subject)
+			log.Printf("📅 Scheduled email to %s (%s) at %s IST - Subject: %s", record.Email, record.EmployeeName, sendTime, subject)
 		}
 
 		// Mark this email as pending to avoid scheduling it again in this batch
@@ -155,8 +149,7 @@ func ScheduleEmailsFromGoogleSheet(emailScheduler *scheduler.Scheduler, cfg *con
 	}
 
 	// Summary log
-	log.Printf("📊 Summary: %d records processed, %d scheduled, %d skipped (already sent), %d skipped (already pending)",
-		len(response.Data), scheduled, skippedSent, skippedPending)
+	log.Printf("📊 Summary: %d records processed, %d scheduled, %d skipped (already sent), %d skipped (already pending)", len(response.Data), scheduled, skippedSent, skippedPending)
 
 	return nil
 }

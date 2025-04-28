@@ -77,9 +77,8 @@ func (s *Scheduler) ScheduleEmail(to, subject, templatePath string, templateData
 	s.mu.Lock()
 	s.jobs[id] = job
 	s.mu.Unlock()
-
-	log.Printf("📋 Email job created with ID '%s' to %s scheduled for %s",
-		id, to, sendAt.Format("2006-01-02 15:04:05"))
+	ist, _ := time.LoadLocation("Asia/Kolkata")
+	log.Printf("📋 Email job created with ID '%s' to %s scheduled for %s", id, to, sendAt.In(ist).Format("2006-01-02 15:04:05"))
 	return id, nil
 }
 
@@ -135,7 +134,7 @@ func (s *Scheduler) Start() {
 	s.wg.Add(1)
 	go func() {
 		defer s.wg.Done()
-		ticker := time.NewTicker(2 * time.Second)
+		ticker := time.NewTicker(20 * time.Second)
 		defer ticker.Stop()
 
 		for {
@@ -159,7 +158,8 @@ func (s *Scheduler) Stop() {
 
 // processJobs processes jobs that are due
 func (s *Scheduler) processJobs() {
-	now := time.Now()
+	ist, _ := time.LoadLocation("Asia/Kolkata")
+	now := time.Now().In(ist)
 	var jobsToProcess []*EmailJob
 
 	// First, find jobs that need to be processed
